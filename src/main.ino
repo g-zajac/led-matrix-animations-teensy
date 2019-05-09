@@ -7,6 +7,7 @@
 #define MATRIX_WIDTH 9
 #define MATRIX_HEIGHT 18
 
+#define NUM_LEDS (MATRIX_WIDTH * MATRIX_HEIGHT)
 // MATRIX DECLARATION:
 // Parameter 1 = width of NeoPixel matrix
 // Parameter 2 = height of matrix
@@ -26,7 +27,7 @@
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 
-Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_STRIP_PIN,
+Adafruit_NeoMatrix strip = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_STRIP_PIN,
   NEO_MATRIX_BOTTOM    + NEO_MATRIX_RIGHT +
   NEO_MATRIX_ROWS + NEO_MATRIX_ZIGZAG,
   NEO_RGB            + NEO_KHZ800);
@@ -34,30 +35,43 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_
 #define BLACK   0x0000
 #define WHITE   0xFFFF
 #define YELLOW  0xFFE0
-#define BRIGHTNESS 255
+#define BRIGHTNESS 100
 
 void nonBlockingDelay(int del) {
   unsigned long myPrevMillis = millis();
   while (millis()- myPrevMillis <= del);
 }
 
+void rainbow(int wait) {
+  for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
+    for(int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
+      int pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
+      strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(pixelHue)));
+    }
+    strip.show(); // Update strip with new contents
+    delay(wait);  // Pause for a moment
+  }
+}
+
 void pixelsTest(){
-    matrix.fillScreen(0);
-    matrix.show();
+    strip.fillScreen(0);
+    strip.show();
     nonBlockingDelay(1000);
     for (int j = 0; j < 18; j++){
-        matrix.drawLine(0,j,9,j,matrix.Color(100,100,100));
-        matrix.show();
+        strip.drawLine(0,j,9,j,strip.Color(100,100,100));
+        strip.show();
         nonBlockingDelay(50);
     }
-    nonBlockingDelay(3000);
+    nonBlockingDelay(2000);
+
+    rainbow(10);
 }
 
 void setup() {
     Serial.begin(115200);
-    matrix.begin();
-    matrix.setBrightness(BRIGHTNESS);
-    matrix.setTextColor(WHITE);
+    strip.begin();
+    strip.setBrightness(BRIGHTNESS);
+    strip.setTextColor(WHITE);
 }
 
 void loop() {
