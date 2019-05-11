@@ -4,7 +4,12 @@
 #include <Adafruit_NeoPixel.h>
 #include <SPI.h>
 
+#include <Fonts/FreeMono12pt7b.h>
 #include <Fonts/FreeSans12pt7b.h>
+#include <Fonts/FreeSerif12pt7b.h>
+
+
+
 #include <bitmaps.h>
 
 #define LED_STRIP_PIN 2
@@ -94,7 +99,10 @@ void setup() {
     strip.setBrightness(BRIGHTNESS);
     strip.setTextColor(WHITE);
     strip.setTextWrap(false);
+
+    // strip.setFont(&FreeMono12pt7b);
     strip.setFont(&FreeSans12pt7b);
+    // strip.setFont(&FreeSerif12pt7b);
 }
 
 void loop() {
