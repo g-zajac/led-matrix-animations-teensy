@@ -14,6 +14,7 @@
 bool interrupt = LOW;
 
 #define RELAY_OUT 0
+#define TEST_BUTTON 17
 
 #define LED_STRIP_PIN 2
 #define MATRIX_WIDTH 9
@@ -148,11 +149,16 @@ void setup() {
     // strip.setFont(&FreeSerif12pt7b);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, interrupt);
+    pinMode(TEST_BUTTON,INPUT_PULLUP);
 
     pinMode(PIR_INPUT, INPUT_PULLDOWN);
     attachInterrupt(digitalPinToInterrupt(PIR_INPUT), movmentSensed, RISING);
     pinMode(RELAY_OUT, OUTPUT);
     digitalWrite(RELAY_OUT, LOW);
+
+    if (!digitalRead(TEST_BUTTON)){
+        pixelsTest();
+    }
 }
 
 void loop() {
