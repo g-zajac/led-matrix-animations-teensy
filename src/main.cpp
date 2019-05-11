@@ -95,9 +95,8 @@ void setup() {
     strip.setTextColor(WHITE);
     strip.setTextWrap(false);
     strip.setFont(&FreeSans12pt7b);
-    displayMan();
 }
 
 void loop() {
-    // scrollText();
+    scrollText();
 }
