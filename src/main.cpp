@@ -13,6 +13,9 @@
 #define PIR_INPUT 1
 bool interrupt = LOW;
 
+#define RELAY_OUT 0
+#define TEST_BUTTON 17
+
 #define LED_STRIP_PIN 2
 #define MATRIX_WIDTH 9
 #define MATRIX_HEIGHT 18
@@ -72,6 +75,7 @@ void rainbow(int wait) {
 }
 
 void pixelsTest(){
+    digitalWrite(RELAY_OUT, HIGH);
     strip.fillScreen(0);
     strip.show();
     nonBlockingDelay(1000);
@@ -106,6 +110,7 @@ void flockAnimation() {
 void switchToFlock(){
     displayMan();
     nonBlockingDelay(3000);
+    digitalWrite(RELAY_OUT, HIGH);
     flockAnimation();
     interrupt = LOW;
     digitalWrite(LED_BUILTIN, interrupt);
@@ -118,6 +123,9 @@ void scrollText(){
         strip.fillScreen(BLACK);
         strip.setCursor(i, 18);
 
+        if (i < -15){
+            digitalWrite(RELAY_OUT, LOW);
+        };
         if ((interrupt && (i == 8))){
             i = 8;
             switchToFlock();
@@ -141,9 +149,16 @@ void setup() {
     // strip.setFont(&FreeSerif12pt7b);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, interrupt);
+    pinMode(TEST_BUTTON,INPUT_PULLUP);
 
     pinMode(PIR_INPUT, INPUT_PULLDOWN);
     attachInterrupt(digitalPinToInterrupt(PIR_INPUT), movmentSensed, RISING);
+    pinMode(RELAY_OUT, OUTPUT);
+    digitalWrite(RELAY_OUT, LOW);
+
+    if (!digitalRead(TEST_BUTTON)){
+        pixelsTest();
+    }
 }
 
 void loop() {
