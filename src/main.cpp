@@ -10,6 +10,9 @@
 
 #include <bitmaps.h>
 
+#define PIR_INPUT 1
+bool interrupt = LOW;
+
 #define LED_STRIP_PIN 2
 #define MATRIX_WIDTH 9
 #define MATRIX_HEIGHT 18
@@ -44,8 +47,13 @@ Adafruit_NeoMatrix strip = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_S
 #define YELLOW  0xFFE0
 #define BRIGHTNESS 100
 
-int textSpeed = 190;
+int textSpeed = 200;
 int flockSpeed = 120; // ms between frames
+
+void movmentSensed() {
+  interrupt = HIGH;
+  digitalWrite(LED_BUILTIN, interrupt);
+}
 
 void nonBlockingDelay(int del) {
   unsigned long myPrevMillis = millis();
@@ -76,16 +84,6 @@ void pixelsTest(){
     rainbow(10);
 }
 
-void scrollText(){
-    for (int i = 8; i  > -(6*12); i--){
-        strip.fillScreen(BLACK);
-        strip.setCursor(i, 18);
-        strip.print(F("Poland"));
-        strip.show();
-        nonBlockingDelay(textSpeed);
-    }
-}
-
 void displayMan(){
     strip.fillScreen(BLACK);
     strip.drawBitmap(0, 0, man, 9, 18, WHITE);
@@ -105,6 +103,32 @@ void flockAnimation() {
     strip.setBrightness(BRIGHTNESS);
 }
 
+void switchToFlock(){
+    displayMan();
+    nonBlockingDelay(3000);
+    flockAnimation();
+    interrupt = LOW;
+    digitalWrite(LED_BUILTIN, interrupt);
+    nonBlockingDelay(1000);
+    // digitalWrite(RELAY_OUT, LOW);
+}
+
+void scrollText(){
+    for (int i = 8; i  > -(6*12); i--){
+        strip.fillScreen(BLACK);
+        strip.setCursor(i, 18);
+
+        if ((interrupt && (i == 8))){
+            i = 8;
+            switchToFlock();
+        }
+
+        strip.print(F("Poland"));
+        strip.show();
+        nonBlockingDelay(textSpeed);
+    }
+}
+
 void setup() {
     Serial.begin(115200);
     strip.begin();
@@ -115,9 +139,13 @@ void setup() {
     // strip.setFont(&FreeMono12pt7b);
     strip.setFont(&FreeSans12pt7b);
     // strip.setFont(&FreeSerif12pt7b);
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, interrupt);
+
+    pinMode(PIR_INPUT, INPUT_PULLDOWN);
+    attachInterrupt(digitalPinToInterrupt(PIR_INPUT), movmentSensed, RISING);
 }
 
 void loop() {
     scrollText();
-    flockAnimation();
 }
