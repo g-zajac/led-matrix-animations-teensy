@@ -44,7 +44,7 @@ Adafruit_NeoMatrix strip = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_S
 #define YELLOW  0xFFE0
 #define BRIGHTNESS 100
 
-int textSpeed = 180;
+int textSpeed = 190;
 int flockSpeed = 120; // ms between frames
 
 void nonBlockingDelay(int del) {
@@ -102,6 +102,7 @@ void flockAnimation() {
         nonBlockingDelay(flockSpeed);
         strip.fillScreen(BLACK);
     }
+    strip.setBrightness(BRIGHTNESS);
 }
 
 void setup() {
@@ -117,6 +118,6 @@ void setup() {
 }
 
 void loop() {
-    // scrollText();
+    scrollText();
     flockAnimation();
 }
