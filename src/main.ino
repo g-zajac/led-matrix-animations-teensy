@@ -4,6 +4,7 @@
 #include <SPI.h>
 
 #include <Fonts/FreeSans12pt7b.h>
+#include <bitmaps.h>
 
 #define LED_STRIP_PIN 2
 #define MATRIX_WIDTH 9
@@ -80,6 +81,12 @@ void scrollText(){
     }
 }
 
+void displayMan(){
+    strip.fillScreen(BLACK);
+    strip.drawBitmap(0, 0, man, 9, 18, WHITE);
+    strip.show();
+}
+
 void setup() {
     Serial.begin(115200);
     strip.begin();
@@ -87,10 +94,9 @@ void setup() {
     strip.setTextColor(WHITE);
     strip.setTextWrap(false);
     strip.setFont(&FreeSans12pt7b);
-    // strip.setTextSize(1);
+    displayMan();
 }
 
 void loop() {
-    // pixelsTest();
-        scrollText();
+    // scrollText();
 }
