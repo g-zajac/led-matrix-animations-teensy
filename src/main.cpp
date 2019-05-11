@@ -8,8 +8,6 @@
 #include <Fonts/FreeSans12pt7b.h>
 #include <Fonts/FreeSerif12pt7b.h>
 
-
-
 #include <bitmaps.h>
 
 #define LED_STRIP_PIN 2
@@ -46,7 +44,9 @@ Adafruit_NeoMatrix strip = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_S
 #define YELLOW  0xFFE0
 #define BRIGHTNESS 100
 
-int textSpeed = 200;
+int textSpeed = 180;
+int flockSpeed = 120; // ms between frames
+
 void nonBlockingDelay(int del) {
   unsigned long myPrevMillis = millis();
   while (millis()- myPrevMillis <= del);
@@ -73,7 +73,6 @@ void pixelsTest(){
         nonBlockingDelay(50);
     }
     nonBlockingDelay(2000);
-
     rainbow(10);
 }
 
@@ -93,6 +92,18 @@ void displayMan(){
     strip.show();
 }
 
+void flockAnimation() {
+    int b = BRIGHTNESS;
+    strip.fillScreen(BLACK);
+    for (int a = 1; a < 36; a++){
+        strip.drawBitmap(0, 0, bitmapFrames[a], 9, 18, WHITE);
+        strip.setBrightness(b - (a*2));
+        strip.show();
+        nonBlockingDelay(flockSpeed);
+        strip.fillScreen(BLACK);
+    }
+}
+
 void setup() {
     Serial.begin(115200);
     strip.begin();
@@ -106,5 +117,6 @@ void setup() {
 }
 
 void loop() {
-    scrollText();
+    // scrollText();
+    flockAnimation();
 }
