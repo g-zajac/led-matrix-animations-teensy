@@ -3,6 +3,8 @@
 #include <Adafruit_NeoPixel.h>
 #include <SPI.h>
 
+#include <Fonts/FreeSans12pt7b.h>
+
 #define LED_STRIP_PIN 2
 #define MATRIX_WIDTH 9
 #define MATRIX_HEIGHT 18
@@ -38,7 +40,6 @@ Adafruit_NeoMatrix strip = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_S
 #define BRIGHTNESS 100
 
 int textSpeed = 200;
-
 void nonBlockingDelay(int del) {
   unsigned long myPrevMillis = millis();
   while (millis()- myPrevMillis <= del);
@@ -70,9 +71,9 @@ void pixelsTest(){
 }
 
 void scrollText(){
-    for (int i = 8; i  > -36; i--){
+    for (int i = 8; i  > -(6*12); i--){
         strip.fillScreen(BLACK);
-        strip.setCursor(i, 8);
+        strip.setCursor(i, 18);
         strip.print(F("Poland"));
         strip.show();
         nonBlockingDelay(textSpeed);
@@ -84,6 +85,9 @@ void setup() {
     strip.begin();
     strip.setBrightness(BRIGHTNESS);
     strip.setTextColor(WHITE);
+    strip.setTextWrap(false);
+    strip.setFont(&FreeSans12pt7b);
+    // strip.setTextSize(1);
 }
 
 void loop() {
