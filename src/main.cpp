@@ -16,7 +16,7 @@ bool interrupt = LOW;
 #define RELAY_OUT 0
 #define TEST_BUTTON 17
 
-#define LED_STRIP_PIN 2
+#define LED_STRIP_PIN 6
 #define MATRIX_WIDTH 9
 #define MATRIX_HEIGHT 18
 
@@ -48,7 +48,7 @@ Adafruit_NeoMatrix strip = Adafruit_NeoMatrix(MATRIX_WIDTH, MATRIX_HEIGHT, LED_S
 #define BLACK   0x0000
 #define WHITE   0xFFFF
 #define YELLOW  0xFFE0
-#define BRIGHTNESS 100
+#define BRIGHTNESS 255
 
 int textSpeed = 200;
 int flockSpeed = 120; // ms between frames
@@ -111,8 +111,8 @@ void switchToFlock(){
     displayMan();
     nonBlockingDelay(3000);
     digitalWrite(RELAY_OUT, HIGH);
-    flockAnimation();
     interrupt = LOW;
+    flockAnimation();
     digitalWrite(LED_BUILTIN, interrupt);
     nonBlockingDelay(1000);
     // digitalWrite(RELAY_OUT, LOW);
